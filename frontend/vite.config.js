@@ -4,9 +4,6 @@ import tailwindcss from '@tailwindcss/vite'
 
 export default defineConfig({
   plugins: [react(), tailwindcss()],
-  optimizeDeps: {
-    include: ['markmap-lib', 'markmap-view'],
-  },
   server: {
     proxy: { '/api': 'http://localhost:8000' },
   },

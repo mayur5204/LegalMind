@@ -1,35 +1,39 @@
+import os
 import httpx
 import json
 from typing import AsyncGenerator
 
-OLLAMA_BASE = "http://127.0.0.1:11434"
+OLLAMA_BASE = os.getenv("OLLAMA_BASE", "http://127.0.0.1:11434")
+CHAT_MODEL = os.getenv("CHAT_MODEL", "gemma4:31b-cloud")
 
 
 async def call_ollama(
-    prompt: str, model: str = "gemma4:31b-cloud", temperature: float = 0.1
+    prompt: str, model: str = None, temperature: float = 0.1
 ) -> str:
+    model = model or CHAT_MODEL
     payload = {
         "model": model,
         "prompt": prompt,
         "stream": False,
         "options": {"temperature": temperature},
     }
-    async with httpx.AsyncClient(timeout=120.0) as client:
+    async with httpx.AsyncClient(timeout=180.0) as client:
         resp = await client.post(f"{OLLAMA_BASE}/api/generate", json=payload)
         resp.raise_for_status()
         return resp.json()["response"]
 
 
 async def stream_ollama(
-    prompt: str, model: str = "gemma4:31b-cloud", temperature: float = 0.3
+    prompt: str, model: str = None, temperature: float = 0.3
 ) -> AsyncGenerator[str, None]:
+    model = model or CHAT_MODEL
     payload = {
         "model": model,
         "prompt": prompt,
         "stream": True,
         "options": {"temperature": temperature},
     }
-    async with httpx.AsyncClient(timeout=120.0) as client:
+    async with httpx.AsyncClient(timeout=180.0) as client:
         async with client.stream(
             "POST", f"{OLLAMA_BASE}/api/generate", json=payload
         ) as resp:
