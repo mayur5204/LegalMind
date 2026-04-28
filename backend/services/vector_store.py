@@ -6,7 +6,7 @@ import pathlib
 CHROMA_DIR = str(pathlib.Path(__file__).parent.parent / "chroma_db").replace("\\", "/")
 
 embeddings = GoogleGenerativeAIEmbeddings(
-    model="models/embedding-001",
+    model="gemini-embedding-001",
     google_api_key=os.getenv("GOOGLE_API_KEY"),
 )
 
