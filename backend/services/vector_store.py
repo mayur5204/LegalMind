@@ -1,14 +1,10 @@
-import os
-from langchain_voyageai import VoyageAIEmbeddings
+from langchain_ollama import OllamaEmbeddings
 from langchain_chroma import Chroma
 import pathlib
 
 CHROMA_DIR = str(pathlib.Path(__file__).parent.parent / "chroma_db").replace("\\", "/")
 
-embeddings = VoyageAIEmbeddings(
-    voyage_api_key=os.getenv("VOYAGE_API_KEY"),
-    model="voyage-law-2",   # specialized for legal documents
-)
+embeddings = OllamaEmbeddings(model="nomic-embed-text")
 
 
 def _get_vectorstore(doc_id: str) -> Chroma:
