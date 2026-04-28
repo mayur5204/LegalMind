@@ -1,11 +1,14 @@
-from langchain_ollama import OllamaEmbeddings
+import os
+from langchain_google_genai import GoogleGenerativeAIEmbeddings
 from langchain_chroma import Chroma
 import pathlib
 
-EMBED_MODEL = "nomic-embed-text"
 CHROMA_DIR = str(pathlib.Path(__file__).parent.parent / "chroma_db").replace("\\", "/")
 
-embeddings = OllamaEmbeddings(model=EMBED_MODEL)
+embeddings = GoogleGenerativeAIEmbeddings(
+    model="models/text-embedding-004",
+    google_api_key=os.getenv("GOOGLE_API_KEY"),
+)
 
 
 def _get_vectorstore(doc_id: str) -> Chroma:
